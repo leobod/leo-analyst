@@ -1,0 +1,26 @@
+{
+  "name": "leo-analyst-base",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "electron:dev": "nodemon --exec electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leobod/leo-analyst.git"
+  },
+  "author": "leobod (leobod@eside.cn)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leobod/leo-analyst/issues"
+  },
+  "homepage": "https://github.com/leobod/leo-analyst#readme",
+  "dependencies": {
+    "cross-env": "^7.0.3"
+  },
+  "devDependencies": {
+    "electron": "^27.1.2",
+    "nodemon": "^3.0.1"
+  }
+}
