@@ -1,10 +1,19 @@
 <template>
   <div class="CustomDragFrame">
     <div class="CustomDragHeader">
+      <div class="CustomDragHeader-BtnGroup">
+        <ArrowLeftBold class="CustomDragHeader-BtnItem" @click="onHandleMin" />
+        <ArrowRightBold
+          class="CustomDragHeader-BtnItem"
+          disabled
+          @click="onHandleClose"
+        />
+      </div>
       <div
         class="CustomDragHeader-TitleBar"
         @mousedown="onHandleMouseDown"
         @mouseup="onHandleMouseUp"
+        @dblclick="onHandleToggleMax"
       >
         {{ $t('标题栏') }}
       </div>
@@ -20,35 +29,49 @@
 </template>
 
 <script setup name="CustomDragFrame">
-import { Remove, SwitchButton } from '@element-plus/icons-vue'
+import {
+  Remove,
+  SwitchButton,
+  ArrowLeftBold,
+  ArrowRightBold
+} from '@element-plus/icons-vue'
 
 const onHandleMin = () => {
-  if (window && window.$ipc && window.$ipc.win) {
-    window.$ipc.win.min()
+  if (window && window.$ipc) {
+    window.$ipc.winAction({ type: 'MIN_WIN' })
+  } else {
+    console.warn('暂无ipc')
+  }
+}
+
+const onHandleToggleMax = () => {
+  console.log('run')
+  if (window && window.$ipc) {
+    window.$ipc.winAction({ type: 'TOGGLE_MAX_WIN' })
   } else {
     console.warn('暂无ipc')
   }
 }
 
 const onHandleClose = () => {
-  if (window && window.$ipc && window.$ipc.win) {
-    window.$ipc.win.close()
+  if (window && window.$ipc) {
+    window.$ipc.winAction({ type: 'CLOSE_WIN' })
   } else {
     console.warn('暂无ipc')
   }
 }
 
 const onHandleMouseDown = () => {
-  if (window && window.$ipc && window.$ipc.win) {
-    window.$ipc.win.move(true)
+  if (window && window.$ipc) {
+    window.$ipc.winAction({ type: 'MOVE_WIN', payload: true })
   } else {
     console.warn('暂无ipc')
   }
 }
 
 const onHandleMouseUp = () => {
-  if (window && window.$ipc && window.$ipc.win) {
-    window.$ipc.win.move(false)
+  if (window && window.$ipc) {
+    window.$ipc.winAction({ type: 'MOVE_WIN', payload: false })
   } else {
     console.warn('暂无ipc')
   }
@@ -62,14 +85,19 @@ const onHandleMouseUp = () => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
   .CustomDragHeader {
     display: flex;
     flex-direction: row;
     align-items: center;
     -webkit-app-region: drag;
     height: 40px;
-    background-color: #409eff;
-    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.9); // #409eff;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
     .CustomDragHeader-TitleBar {
       height: 100%;
       flex: 1;
@@ -79,6 +107,7 @@ const onHandleMouseUp = () => {
       align-items: center;
       color: #ffffff;
       user-select: none;
+      // -webkit-app-region: no-drag;
     }
     .CustomDragHeader-BtnGroup {
       padding: 0 20px;
@@ -100,6 +129,15 @@ const onHandleMouseUp = () => {
         color: #f56c6c;
       }
     }
+  }
+  .CustomDragBody {
+    flex: 1 0 0;
+    background-color: #ffffff;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
 }
 </style>

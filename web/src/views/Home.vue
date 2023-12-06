@@ -1,5 +1,10 @@
 <template>
-  <div class="Home">首页</div>
+  <div class="Home">
+    <ElButton @click="() => $router.push('/PkgVersion')">vue版本获取</ElButton>
+  </div>
 </template>
 
-<script setup name="Home"></script>
+<script setup name="Home">
+import { useRouter } from 'vue-router'
+const $router = useRouter()
+</script>

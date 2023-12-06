@@ -15,22 +15,19 @@ const router = createRouter({
       component: CustomDragFrame,
       hidden: false, // 是否隐藏
       redirect: '/Home',
-      alwaysShow: false, // 是否显示根节点路由
-      meta: {
-        title: '',
-        icon: 'home'
-      },
+      meta: {},
       children: [
         {
-          path: 'home',
-          name: 'home',
+          path: 'Home',
+          name: 'Home',
           component: () => import('../views/Home.vue'),
-          meta: {
-            title: '',
-            icon: 'home',
-            affix: true, // 是否固定标签页
-            noCache: false // 是否会被<keep-alive>缓存 true会 false 不会
-          }
+          meta: {}
+        },
+        {
+          path: 'PkgVersion',
+          name: 'PkgVersion',
+          component: () => import('../views/PkgVersion.vue'),
+          meta: {}
         }
       ]
     }

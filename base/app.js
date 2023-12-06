@@ -1,5 +1,5 @@
 const { app } = require('electron')
-const Home = require('./src/views/Home/index')
+const Home = require('./src/windows/Main/index')
 
 const root = {
     app: null,

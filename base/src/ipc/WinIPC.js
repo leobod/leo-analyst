@@ -1,4 +1,14 @@
 /**
+渲染器进程到主进程（单向）
+ipcMain.on
+ipcRenderer.send
+
+渲染器进程到主进程（双向）
+ipcMain.handle
+ipcRenderer.invoke
+ */
+
+/**
  * 窗体通用事件
  */
 module.exports = {
@@ -6,7 +16,7 @@ module.exports = {
      * 最大化
      * @param {*} win 
      */
-    maxWin: (win) => {
+    max: (win) => {
         if (win) {
             win.maximize();
         }
@@ -15,9 +25,11 @@ module.exports = {
      * 切换最大化
      * @param {*} win 
      */
-    toggleMaxWin: (win) => {
+    toggleMax: (win) => {
+        console.log(win.isMaximized())
         if (win.isMaximized()) {
-            win.restore();
+            win.unmaximize();
+            // win.restore();
         } else {
             win.maximize();
         }
@@ -26,7 +38,7 @@ module.exports = {
      * 最小化
      * @param {*} win 
      */
-    minWin: (win) => {
+    min: (win) => {
         if (win) {
             win.minimize()
         }
@@ -35,7 +47,7 @@ module.exports = {
      * 关闭
      * @param {*} win 
      */
-    closeWin: (win) => {
+    close: (win) => {
         if (win) {
             win.close()
         }
@@ -46,9 +58,17 @@ module.exports = {
      * @param {*} canMoving 
      * @param {*} model 
      */
-    moveWin: (win, canMoving, model = {}) => {
+    move: (win, canMoving, model = {}) => {
         if (win) {
             if (canMoving) {
+                if (model.prevClickTime) {
+                    const current = new Date().getTime()
+                    if (current - model.prevClickTime > 500) {
+                        console.log(this)
+                        this.toggleMax(win)
+                    }
+                }
+                model.prevClickTime = new Date().getTime()
                 // 读取原位置
                 const winPosition = win.getPosition();
                 winStartPosition = { x: winPosition[0], y: winPosition[1] };
