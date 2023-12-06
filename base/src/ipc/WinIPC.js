@@ -8,6 +8,8 @@ ipcMain.handle
 ipcRenderer.invoke
  */
 
+const { screen } = require('electron')
+
 /**
  * 窗体通用事件
  */
@@ -58,17 +60,10 @@ module.exports = {
      * @param {*} canMoving 
      * @param {*} model 
      */
-    move: (win, canMoving, model = {}) => {
+    move: (win, payload, model = {}) => {
+        const { canMoving } = payload
         if (win) {
             if (canMoving) {
-                if (model.prevClickTime) {
-                    const current = new Date().getTime()
-                    if (current - model.prevClickTime > 500) {
-                        console.log(this)
-                        this.toggleMax(win)
-                    }
-                }
-                model.prevClickTime = new Date().getTime()
                 // 读取原位置
                 const winPosition = win.getPosition();
                 winStartPosition = { x: winPosition[0], y: winPosition[1] };

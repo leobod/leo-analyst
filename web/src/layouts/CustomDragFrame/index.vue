@@ -13,6 +13,7 @@
         class="CustomDragHeader-TitleBar"
         @mousedown="onHandleMouseDown"
         @mouseup="onHandleMouseUp"
+        @mouseleave="onHandleMouseUp"
         @dblclick="onHandleToggleMax"
       >
         {{ $t('标题栏') }}
@@ -61,17 +62,20 @@ const onHandleClose = () => {
   }
 }
 
-const onHandleMouseDown = () => {
+const onHandleMouseDown = (e) => {
   if (window && window.$ipc) {
-    window.$ipc.winAction({ type: 'MOVE_WIN', payload: true })
+    window.$ipc.winAction({
+      type: 'MOVE_WIN',
+      payload: { canMoving: true }
+    })
   } else {
     console.warn('暂无ipc')
   }
 }
 
-const onHandleMouseUp = () => {
+const onHandleMouseUp = (e) => {
   if (window && window.$ipc) {
-    window.$ipc.winAction({ type: 'MOVE_WIN', payload: false })
+    window.$ipc.winAction({ type: 'MOVE_WIN', payload: { canMoving: false } })
   } else {
     console.warn('暂无ipc')
   }
@@ -90,7 +94,7 @@ const onHandleMouseUp = () => {
     display: flex;
     flex-direction: row;
     align-items: center;
-    -webkit-app-region: drag;
+    // -webkit-app-region: drag;
     height: 40px;
     background-color: rgba(0, 0, 0, 0.9); // #409eff;
     backdrop-filter: blur(10px);

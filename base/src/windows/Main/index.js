@@ -14,7 +14,6 @@ module.exports = {
     },
     methods: {
         onHandleWinAction: function (event, params) {
-            console.log(params)
             const { type, payload } = params
             switch (type) {
                 case 'MIN_WIN': {
@@ -34,7 +33,7 @@ module.exports = {
                     break
                 }
                 case 'MOVE_WIN': {
-                    WinIPC.move(this.win, !!payload, this.model)
+                    WinIPC.move(this.win, payload, this.model)
                     break
                 }
             }
