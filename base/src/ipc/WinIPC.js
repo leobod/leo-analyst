@@ -28,7 +28,6 @@ module.exports = {
      * @param {*} win 
      */
     toggleMax: (win) => {
-        console.log(win.isMaximized())
         if (win.isMaximized()) {
             win.unmaximize();
             // win.restore();

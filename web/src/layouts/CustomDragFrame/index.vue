@@ -2,11 +2,10 @@
   <div class="CustomDragFrame">
     <div class="CustomDragHeader">
       <div class="CustomDragHeader-BtnGroup">
-        <ArrowLeftBold class="CustomDragHeader-BtnItem" @click="onHandleMin" />
-        <ArrowRightBold
+        <ArrowLeftBold
           class="CustomDragHeader-BtnItem"
-          disabled
-          @click="onHandleClose"
+          v-show="!($route.name === 'Home')"
+          @click="onGoBack"
         />
       </div>
       <div
@@ -14,13 +13,19 @@
         @mousedown="onHandleMouseDown"
         @mouseup="onHandleMouseUp"
         @mouseleave="onHandleMouseUp"
-        @dblclick="onHandleToggleMax"
+        @dblclick="onEmitWinAction('TOGGLE_MAX_WIN')"
       >
-        {{ $t('标题栏') }}
+        {{ $route.meta.title }}
       </div>
       <div class="CustomDragHeader-BtnGroup">
-        <Remove class="CustomDragHeader-BtnItem" @click="onHandleMin" />
-        <SwitchButton class="CustomDragHeader-BtnItem" @click="onHandleClose" />
+        <Remove
+          class="CustomDragHeader-BtnItem"
+          @click="onEmitWinAction('MIN_WIN')"
+        />
+        <SwitchButton
+          class="CustomDragHeader-BtnItem"
+          @click="onEmitWinAction('CLOSE_WIN')"
+        />
       </div>
     </div>
     <div class="CustomDragBody">
@@ -30,35 +35,27 @@
 </template>
 
 <script setup name="CustomDragFrame">
-import {
-  Remove,
-  SwitchButton,
-  ArrowLeftBold,
-  ArrowRightBold
-} from '@element-plus/icons-vue'
+import { useRouter, useRoute } from 'vue-router'
+import { Remove, SwitchButton, ArrowLeftBold } from '@element-plus/icons-vue'
+const $router = useRouter()
+const $route = useRoute()
 
-const onHandleMin = () => {
-  if (window && window.$ipc) {
-    window.$ipc.winAction({ type: 'MIN_WIN' })
-  } else {
-    console.warn('暂无ipc')
-  }
+const onGoBack = () => {
+  document.referrer ? $router.go(-1) : $router.push('/')
 }
 
-const onHandleToggleMax = () => {
-  console.log('run')
+const onEmitWinAction = (type) => {
   if (window && window.$ipc) {
-    window.$ipc.winAction({ type: 'TOGGLE_MAX_WIN' })
+    switch (type) {
+      case 'MIN_WIN':
+      case 'CLOSE_WIN':
+      case 'TOGGLE_MAX_WIN': {
+        window.$ipc.winAction({ type })
+        break
+      }
+    }
   } else {
-    console.warn('暂无ipc')
-  }
-}
-
-const onHandleClose = () => {
-  if (window && window.$ipc) {
-    window.$ipc.winAction({ type: 'CLOSE_WIN' })
-  } else {
-    console.warn('暂无ipc')
+    console.warn('平台暂不支持')
   }
 }
 
@@ -69,7 +66,7 @@ const onHandleMouseDown = (e) => {
       payload: { canMoving: true }
     })
   } else {
-    console.warn('暂无ipc')
+    console.warn('平台暂不支持')
   }
 }
 
@@ -77,7 +74,7 @@ const onHandleMouseUp = (e) => {
   if (window && window.$ipc) {
     window.$ipc.winAction({ type: 'MOVE_WIN', payload: { canMoving: false } })
   } else {
-    console.warn('暂无ipc')
+    console.warn('平台暂不支持')
   }
 }
 </script>

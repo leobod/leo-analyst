@@ -13,7 +13,6 @@ module.exports = {
         const unknownErr = Object.assign({}, ipcResponse.STATUS_CODE.UNKNOWN_ERROR)
         const paramErr = Object.assign({}, ipcResponse.STATUS_CODE.PARAM_ERROR)
         const { type, payload } = params
-        console.log(params)
         let result = null
         try {
             switch (type) {

@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'
 import './styles/index.scss'
 import 'normalize.css'
+import 'virtual:svg-icons-register'
 
 import i18n from './lang/index'
 

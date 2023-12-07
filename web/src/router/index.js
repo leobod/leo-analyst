@@ -5,29 +5,51 @@ import CustomDragFrame from '../layouts/CustomDragFrame/index.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'home',
-    //   component: HomeView
-    // },
     {
       path: '/',
       component: CustomDragFrame,
-      hidden: false, // 是否隐藏
       redirect: '/Home',
       meta: {},
       children: [
         {
           path: 'Home',
           name: 'Home',
-          component: () => import('../views/Home.vue'),
-          meta: {}
+          component: () => import('../views/Home/Home.vue'),
+          meta: {
+            title: '首页'
+          }
+        }
+      ]
+    },
+    {
+      path: '/Analyser',
+      component: CustomDragFrame,
+      redirect: '/Analyser/PkgAnalyser',
+      meta: {},
+      children: [
+        {
+          path: 'PkgAnalyser',
+          name: 'PkgAnalyser',
+          component: () => import('../views/Analyser/PkgAnalyser.vue'),
+          meta: {
+            title: 'Package分析器'
+          }
         },
         {
-          path: 'PkgVersion',
-          name: 'PkgVersion',
-          component: () => import('../views/PkgVersion.vue'),
-          meta: {}
+          path: 'PageAnalyser',
+          name: 'PageAnalyser',
+          component: () => import('../views/Analyser/PageAnalyser.vue'),
+          meta: {
+            title: '页面分析器'
+          }
+        },
+        {
+          path: 'I18nCollector',
+          name: 'I18nCollector',
+          component: () => import('../views/Analyser/I18nCollector.vue'),
+          meta: {
+            title: '多语言搜集器'
+          }
         }
       ]
     }

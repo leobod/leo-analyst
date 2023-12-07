@@ -1,0 +1,41 @@
+$sides: (top, bottom, left, right);
+
+@for $space from 1 through 100 {
+  .mh-#{$space} {
+    margin-left: #{$space}px;
+    margin-right: #{$space}px;
+  }
+  .mv-#{$space} {
+    margin-top: #{$space}px;
+    margin-bottom: #{$space}px;
+  }
+  .m-#{$space} {
+    margin-top: #{$space}px;
+    margin-right: #{$space}px;
+    margin-bottom: #{$space}px;
+    margin-left: #{$space}px;
+  }
+  .ph-#{$space} {
+    padding-left: #{$space}px;
+    padding-right: #{$space}px;
+  }
+  .pv-#{$space} {
+    padding-top: #{$space}px;
+    padding-bottom: #{$space}px;
+  }
+  .p-#{$space} {
+    padding-top: #{$space}px;
+    padding-right: #{$space}px;
+    padding-bottom: #{$space}px;
+    padding-left: #{$space}px;
+  }
+
+  @each $side in $sides {
+    .m#{str-slice($side, 0, 1)}-#{$space} {
+      margin-#{$side}: #{$space}px;
+    }
+    .p#{str-slice($side, 0, 1)}-#{$space} {
+      padding-#{$side}: #{$space}px;
+    }
+  }
+}

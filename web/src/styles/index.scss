@@ -1,12 +1,13 @@
 @use 'element-plus/dist/index.css';
 @use 'element-plus/theme-chalk/dark/css-vars.css';
-// @use './variables.scss';
+@use './commonDef.scss';
 
 html,
 body {
   height: 100%;
   padding: 0;
   margin: 0;
+  font-family: SourceHanSansSC;
 }
 
 #app {
