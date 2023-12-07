@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon --exec electron .",
-    "build": "electron-builder build -c electron-builder.json --win"
+    "build:win": "electron-builder build -c electron-builder.json --win",
+    "build:deb": "electron-builder build -c electron-builder.json --linux deb"
   },
   "repository": {
     "type": "git",

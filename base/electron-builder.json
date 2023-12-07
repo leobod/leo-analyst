@@ -1,35 +1,47 @@
 {
-    "appId": "cn.eside.app.analyst",
-    "productName": "analyst",
-    "asar": true,
-    "directories": {
-        "output": "dist"
+  "appId": "cn.eside.app.analyst",
+  "productName": "analyst",
+  "asar": true,
+  "copyright": "copyright ",
+  "directories": {
+    "output": "dist"
+  },
+  "extraFiles": [
+    {
+      "from": "web",
+      "to": "web"
     },
-    "extraFiles": [
-        {
-            "from": "web",
-            "to": "web"
-        }
-    ],
-    "files": [
-        "app.js",
-        "src/**/*",
-        "web/**/*"
-    ],
-    "win": {
-        "target": [
-            {
-                "target": "nsis",
-                "arch": [
-                    "ia32"
-                ]
-            }
-        ]
-    },
-    "nsis": {
-        "oneClick": false,
-        "perMachine": true,
-        "allowElevation": true,
-        "allowToChangeInstallationDirectory": true
+    {
+      "from": "assets",
+      "to": "assets"
     }
+  ],
+  "files": ["app.js", "src/**/*", "web/**/*", "logo.ico"],
+  "win": {
+    "icon": "./logo.ico",
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["ia32"]
+      }
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": true,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": true,
+    "installerIcon": "./logo.ico",
+    "installerHeaderIcon": "./logo.ico",
+    "uninstallerIcon": "./uninstall.ico",
+    "createDesktopShortcut": true
+  },
+  "linux": {
+    "desktop": {
+      "StartupNotify": "false",
+      "Encoding": "UTF-8",
+      "MimeType": "x-scheme-handler/deeplink"
+    },
+    "target": ["AppImage", "rpm", "deb"]
+  }
 }

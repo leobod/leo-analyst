@@ -18,3 +18,7 @@ npm config set electron_builder_binaries_mirror https://mirrors.huaweicloud.com/
 yarn config set registry https://mirrors.huaweicloud.com/repository/npm/
 
 ```
+
+```
+1. 官方镜像：https://registry.npmjs.org/
+```

@@ -1,0 +1,19 @@
+{
+  "name": "aformatter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "resize:png": "node ./resizePng.js",
+    "build:ico": "node ./toico.js",
+    "build:logo:ico": "to-ico ./origin/蓝莓256x256.png > ./result/logo.ico",
+    "build:delete:ico": "to-ico ./origin/删除256x256.png > ./result/uninstall.ico"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "sharp": "^0.33.0",
+    "to-ico": "^1.1.5",
+    "to-ico-cli": "^1.0.0"
+  }
+}
