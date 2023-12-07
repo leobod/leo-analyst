@@ -2,7 +2,7 @@
   <div class="PkgVersion">
     <div class="PkgVersion-Left">
       <div class="PkgVersion-Content">
-        <ElInput v-model="dirRef" type="text" clearable />
+        <ElInput v-model="model.dirPath" type="text" clearable />
       </div>
       <div class="PkgVersion-Content">
         <ElButton @click="selectDir" type="primary">选择工程目录</ElButton>

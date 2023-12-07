@@ -1,7 +1,6 @@
 const p = require('path')
-const { BrowserWindow, ipcMain, screen } = require('electron')
-const WinIPC = require('../../ipc/WinIPC')
-const PageIpc = require('./ipc/index')
+const { BrowserWindow, ipcMain } = require('electron')
+const $actions = require('./actions/index')
 
 
 module.exports = {
@@ -14,33 +13,10 @@ module.exports = {
     },
     methods: {
         onHandleWinAction: function (event, params) {
-            const { type, payload } = params
-            switch (type) {
-                case 'MIN_WIN': {
-                    WinIPC.min(this.win)
-                    break
-                }
-                case 'MAX_WIN': {
-                    WinIPC.max(this.win)
-                    break
-                }
-                case 'TOGGLE_MAX_WIN': {
-                    WinIPC.toggleMax(this.win)
-                    break
-                }
-                case 'CLOSE_WIN': {
-                    WinIPC.close(this.win)
-                    break
-                }
-                case 'MOVE_WIN': {
-                    WinIPC.move(this.win, payload, this.model)
-                    break
-                }
-            }
-            return null
+            return $actions.win(params, this.win, this.model)
         },
         onHandlePageAction: async function (event, params) {
-            return await PageIpc.action(params)
+            return await $actions.page(params)
         }
     },
     /**

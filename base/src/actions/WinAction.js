@@ -59,7 +59,7 @@ module.exports = {
      * @param {*} canMoving 
      * @param {*} model 
      */
-    move: (win, payload, model = {}) => {
+    move: (payload, win, model = {}) => {
         const { canMoving } = payload
         if (win) {
             if (canMoving) {

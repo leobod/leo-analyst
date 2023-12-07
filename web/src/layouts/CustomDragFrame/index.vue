@@ -93,12 +93,12 @@ const onHandleMouseUp = (e) => {
     align-items: center;
     // -webkit-app-region: drag;
     height: 40px;
-    background-color: rgba(0, 0, 0, 0.9); // #409eff;
+    background-color: rgba(0, 0, 0); // #409eff;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    // border-top-left-radius: 6px;
+    // border-top-right-radius: 6px;
     .CustomDragHeader-TitleBar {
       height: 100%;
       flex: 1;
@@ -108,6 +108,7 @@ const onHandleMouseUp = (e) => {
       align-items: center;
       color: #ffffff;
       user-select: none;
+      font-size: 12px;
       // -webkit-app-region: no-drag;
     }
     .CustomDragHeader-BtnGroup {
@@ -137,8 +138,8 @@ const onHandleMouseUp = (e) => {
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
+    // border-bottom-left-radius: 6px;
+    // border-bottom-right-radius: 6px;
   }
 }
 </style>
