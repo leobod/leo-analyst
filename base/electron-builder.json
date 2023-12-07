@@ -1,0 +1,35 @@
+{
+    "appId": "cn.eside.app.analyst",
+    "productName": "analyst",
+    "asar": true,
+    "directories": {
+        "output": "dist"
+    },
+    "extraFiles": [
+        {
+            "from": "web",
+            "to": "web"
+        }
+    ],
+    "files": [
+        "app.js",
+        "src/**/*",
+        "web/**/*"
+    ],
+    "win": {
+        "target": [
+            {
+                "target": "nsis",
+                "arch": [
+                    "ia32"
+                ]
+            }
+        ]
+    },
+    "nsis": {
+        "oneClick": false,
+        "perMachine": true,
+        "allowElevation": true,
+        "allowToChangeInstallationDirectory": true
+    }
+}

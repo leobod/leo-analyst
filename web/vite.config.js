@@ -1,5 +1,4 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import eslintPlugin from 'vite-plugin-eslint'
@@ -60,7 +59,7 @@ export default defineConfig({
   },
   esbuild: {
     drop: ['debugger'],
-    pure: ['console.log', 'console.info'],
+    pure: [], // ['console.log', 'console.info'],
     legalComments: 'none'
   }
 })

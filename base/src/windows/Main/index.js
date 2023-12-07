@@ -1,4 +1,5 @@
 const p = require('path')
+const url = require('url')
 const { BrowserWindow, ipcMain } = require('electron')
 const $actions = require('./actions/index')
 
@@ -36,7 +37,12 @@ module.exports = {
     loadPage: function () {
         if (this.root.config.env === 'production') {
             // 生产环境
-            this.win.loadFile(p.join(process.cwd(), './web/index.html'))
+            this.win.loadURL(url.format({
+                pathname: p.join(process.cwd(), './web/index.html'),
+                protocol: 'file:',
+                slashes: true
+            }))
+            // this.win.loadFile(p.join(process.cwd(), './web/index.html'))
         } else {
             // 开发环境
             this.win.loadURL('http://127.0.0.1:9999')

@@ -1,11 +1,13 @@
 {
-	"folders": [
-		{
-			"path": "base"
-		},
-		{
-			"path": "web"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "base"
+    },
+    {
+      "path": "web"
+    }
+  ],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "web"
+  }
 }
