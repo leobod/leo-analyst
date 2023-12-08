@@ -4,9 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon --exec electron .",
+    "dev": "nodemon --exec electron app.dev.js",
+    "prod": "electron .",
     "build:win": "electron-builder build -c electron-builder.json --win",
-    "build:deb": "electron-builder build -c electron-builder.json --linux deb"
+    "build:deb": "electron-builder build -c electron-builder.json --linux deb",
+    "test:action": "node ./test/getI18nList.test.js"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,8 @@
   },
   "homepage": "https://github.com/leobod/leo-analyst#readme",
   "dependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "glob": "^10.3.10"
   },
   "devDependencies": {
     "electron": "^27.1.2",

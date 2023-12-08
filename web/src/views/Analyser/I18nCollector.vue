@@ -14,7 +14,7 @@
     <!-- 内容.完成指定步骤需要的页面提示 -->
     <div class="I18nCollector-Body">
       <template v-if="stepBar.current === 0">
-        <div class="Step Step1">
+        <div class="Step Step1" v-loading="step1.loading.submit">
           <div class="Step-Body">
             <el-form
               ref="step1FormRef"
@@ -68,18 +68,33 @@
             </el-form>
           </div>
           <div class="Step-Footer">
-            <el-button @click="onHandleSubmitStep1" type="primary">
+            <el-button
+              type="primary"
+              :loading="step1.loading.submit"
+              :disabled="step1.loading.submit"
+              @click="onHandleSubmitStep1"
+            >
               下一步
             </el-button>
           </div>
         </div>
+      </template>
+      <template v-else-if="stepBar.current === 1">
+        <el-table :data="step2.data" height="100%">
+          <el-table-column prop="label" label="关键词" min-width="200" />
+          <el-table-column prop="value" label="对应的翻译值" min-width="200">
+            <template #default="scope">
+              <el-input v-model="scope.row.value" />
+            </template>
+          </el-table-column>
+        </el-table>
       </template>
     </div>
   </div>
 </template>
 
 <script setup name="I18nCollector">
-import { reactive, ref } from 'vue'
+import { reactive, ref, toRaw } from 'vue'
 
 const stepBar = reactive({
   current: 0,
@@ -90,6 +105,9 @@ const stepBar = reactive({
 })
 const step1FormRef = ref(null)
 const step1 = reactive({
+  loading: {
+    submit: false
+  },
   form: {
     dir: '',
     projectName: '',
@@ -117,21 +135,35 @@ const step1 = reactive({
     matchRule: [{ required: true, message: '请选择匹配规则', trigger: 'blur' }]
   }
 })
+const step2 = reactive({
+  loading: {
+    submit: false
+  },
+  tabCurrent: 'zh',
+  tabList: [],
+  tabOpts: [
+    { label: '中文', value: 'zh' },
+    { label: '英文', value: 'en' },
+    { label: '日文', value: 'ja' }
+  ],
+  data: []
+})
 
 /**
  * 调用ipc实现文件夹路径选择
  */
 const onHandleSelectDir = async () => {
   if (window && window.$ipc) {
-    const res = await window.$ipc.pageAction({ type: 'SELECT_DIR' })
-    if (res && !res.errCode && !res.data.canceled) {
-      step1.form.dir = res.data.filePaths[0] || ''
-      const pkgInfo = await _getPkgInfo(step1.form.dir)
-      if (pkgInfo) {
-        step1.form.projectName = pkgInfo.name
-        step1.form.vueVersion = _getVueVersion(pkgInfo)
+    window.$ipc.pageAction({ type: 'SELECT_DIR' }).then(async (res) => {
+      if (!res.canceled) {
+        step1.form.dir = res.filePaths[0] || ''
+        const pkgInfo = await _getPkgInfo(step1.form.dir)
+        if (pkgInfo) {
+          step1.form.projectName = pkgInfo.name
+          step1.form.vueVersion = _getVueVersion(pkgInfo)
+        }
       }
-    }
+    })
   } else {
     console.warn('暂不支持')
   }
@@ -148,9 +180,7 @@ const _getPkgInfo = async (path) => {
       payload: { path }
     }
     const res = await window.$ipc.pageAction(finalParams)
-    if (res && !res.errCode) {
-      return res.data
-    }
+    return res
   } else {
     console.warn('暂不支持')
   }
@@ -181,9 +211,47 @@ const _getVueVersion = (pkgVal, pkgName = 'vue') => {
  * 提交step1的表单
  */
 const onHandleSubmitStep1 = () => {
-  step1FormRef.value.validate((valid, fields) => {
+  step1.loading.submit = true
+  step1FormRef.value.validate(async (valid, fields) => {
     if (valid) {
-      onHandleNext(1)
+      if (window && window.$ipc) {
+        const finalParams = Object.assign(
+          {},
+          {
+            type: 'GET_I18N_LIST',
+            payload: {
+              path: step1.form.dir,
+              matchRule: toRaw(step1.form.matchRule)
+            }
+          }
+        )
+        console.log(finalParams)
+        window.$ipc
+          .pageAction(finalParams)
+          .then((res) => {
+            console.log(res)
+            if (res && !res.errCode) {
+              console.log(res)
+              step2.data = res.data.map((item) => {
+                return {
+                  label: item,
+                  value: item
+                }
+              })
+              onHandleNext(1)
+            }
+          })
+          .catch((e) => {
+            console.log('e', e)
+          })
+          .finally(() => {
+            step1.loading.submit = false
+          })
+      } else {
+        step1.loading.submit = false
+      }
+    } else {
+      step1.loading.submit = false
     }
   })
 }
@@ -226,6 +294,7 @@ const onHandleNext = (val) => {
     padding: 30px 0;
     width: 75%;
     flex: 1 0 0;
+    overflow: hidden;
     .Step {
       width: 100%;
       height: 100%;
