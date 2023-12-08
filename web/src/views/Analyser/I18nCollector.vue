@@ -1,8 +1,8 @@
 <template>
-  <div class="I18nCollector">
+  <div class="I18nCollector" v-loading="page.loading.submit">
     <!-- 头部.当前处在的步骤 -->
     <div class="I18nCollector-Header">
-      <el-steps :active="stepBar.current" align-center finish-status="success">
+      <el-steps :active="stepBar.current" align-center>
         <el-step
           v-for="(item, idx) of stepBar.opts"
           :key="`StepItem-${idx}`"
@@ -13,8 +13,8 @@
     </div>
     <!-- 内容.完成指定步骤需要的页面提示 -->
     <div class="I18nCollector-Body">
-      <template v-if="stepBar.current === 0">
-        <div class="Step Step1" v-loading="step1.loading.submit">
+      <template v-if="stepBar.current === 1">
+        <div class="Step Step1">
           <div class="Step-Body">
             <el-form
               ref="step1FormRef"
@@ -70,8 +70,8 @@
           <div class="Step-Footer">
             <el-button
               type="primary"
-              :loading="step1.loading.submit"
-              :disabled="step1.loading.submit"
+              :loading="page.loading.submit"
+              :disabled="page.loading.submit"
               @click="onHandleSubmitStep1"
             >
               下一步
@@ -79,7 +79,7 @@
           </div>
         </div>
       </template>
-      <template v-else-if="stepBar.current === 1">
+      <template v-else-if="stepBar.current === 2">
         <el-table :data="step2.data" height="100%">
           <el-table-column prop="label" label="关键词" min-width="200" />
           <el-table-column prop="value" label="对应的翻译值" min-width="200">
@@ -96,18 +96,20 @@
 <script setup name="I18nCollector">
 import { reactive, ref, toRaw } from 'vue'
 
+const page = reactive({
+  loading: {
+    submit: false
+  }
+})
 const stepBar = reactive({
-  current: 0,
+  current: 1,
   opts: [
     { label: '配置工程及版本信息', value: 1 },
-    { label: '查看结果', value: 2 }
+    { label: '查看多语言关键词', value: 2 }
   ]
 })
 const step1FormRef = ref(null)
 const step1 = reactive({
-  loading: {
-    submit: false
-  },
   form: {
     dir: '',
     projectName: '',
@@ -136,9 +138,6 @@ const step1 = reactive({
   }
 })
 const step2 = reactive({
-  loading: {
-    submit: false
-  },
   tabCurrent: 'zh',
   tabList: [],
   tabOpts: [
@@ -211,7 +210,7 @@ const _getVueVersion = (pkgVal, pkgName = 'vue') => {
  * 提交step1的表单
  */
 const onHandleSubmitStep1 = () => {
-  step1.loading.submit = true
+  page.loading.submit = true
   step1FormRef.value.validate(async (valid, fields) => {
     if (valid) {
       if (window && window.$ipc) {
@@ -240,13 +239,13 @@ const onHandleSubmitStep1 = () => {
             console.log('e', e)
           })
           .finally(() => {
-            step1.loading.submit = false
+            page.loading.submit = false
           })
       } else {
-        step1.loading.submit = false
+        page.loading.submit = false
       }
     } else {
-      step1.loading.submit = false
+      page.loading.submit = false
     }
   })
 }
@@ -257,7 +256,7 @@ const onHandleSubmitStep1 = () => {
  */
 const onHandleGoToStep = (val) => {
   if (val <= stepBar.current) {
-    stepBar.current = val - 1
+    stepBar.current = val
   }
 }
 /**
@@ -265,7 +264,7 @@ const onHandleGoToStep = (val) => {
  * @param {*} val
  */
 const onHandleNext = (val) => {
-  if (val >= 0 && val < stepBar.opts.length) {
+  if (val > 0 && val < stepBar.opts.length) {
     stepBar.current++
   }
 }
