@@ -1,7 +1,8 @@
 const p = require('path')
 const url = require('url')
 const { BrowserWindow, ipcMain } = require('electron')
-const $actions = require('./actions/index')
+const CommonAction = require('../../actions/index')
+const PageAction = require('./PageAction')
 
 module.exports = {
   name: 'Home',
@@ -13,10 +14,13 @@ module.exports = {
   },
   methods: {
     onHandleWinAction: function (event, params) {
-      return $actions.win(params, this.win, this.model)
+      return CommonAction.win(this.win, params, this.model)
+    },
+    onHandleFileAction: async function (event, params) {
+      return await CommonAction.file(params)
     },
     onHandlePageAction: async function (event, params) {
-      return await $actions.page(params)
+      return await PageAction.page(params)
     }
   },
   /**
@@ -24,9 +28,11 @@ module.exports = {
    */
   loadIpc: function () {
     ipcMain.handle('win:action', this.methods.onHandleWinAction.bind(this))
+    ipcMain.handle('file:action', this.methods.onHandleFileAction.bind(this))
     ipcMain.handle('page:action', this.methods.onHandlePageAction.bind(this))
     this.win.on('closed', () => {
       ipcMain.removeHandler('win:action')
+      ipcMain.removeHandler('file:action')
       ipcMain.removeHandler('page:action')
     })
   },

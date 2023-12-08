@@ -2,7 +2,7 @@
   <div class="I18nCollector">
     <!-- 头部.当前处在的步骤 -->
     <div class="I18nCollector-Header">
-      <el-steps :active="stepBar.current" simple finish-status="success">
+      <el-steps :active="stepBar.current" align-center finish-status="success">
         <el-step
           v-for="(item, idx) of stepBar.opts"
           :key="`StepItem-${idx}`"
@@ -154,7 +154,7 @@ const step2 = reactive({
  */
 const onHandleSelectDir = async () => {
   if (window && window.$ipc) {
-    window.$ipc.pageAction({ type: 'SELECT_DIR' }).then(async (res) => {
+    window.$ipc.fileAction({ type: 'OPEN_DIRECTORY' }).then(async (res) => {
       if (!res.canceled) {
         step1.form.dir = res.filePaths[0] || ''
         const pkgInfo = await _getPkgInfo(step1.form.dir)
@@ -225,21 +225,16 @@ const onHandleSubmitStep1 = () => {
             }
           }
         )
-        console.log(finalParams)
         window.$ipc
           .pageAction(finalParams)
           .then((res) => {
-            console.log(res)
-            if (res && !res.errCode) {
-              console.log(res)
-              step2.data = res.data.map((item) => {
-                return {
-                  label: item,
-                  value: item
-                }
-              })
-              onHandleNext(1)
-            }
+            step2.data = res.map((item) => {
+              return {
+                label: item,
+                value: item
+              }
+            })
+            onHandleNext(1)
           })
           .catch((e) => {
             console.log('e', e)

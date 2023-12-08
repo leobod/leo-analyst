@@ -8,7 +8,7 @@
     "prod": "electron .",
     "build:win": "electron-builder build -c electron-builder.json --win",
     "build:deb": "electron-builder build -c electron-builder.json --linux deb",
-    "test:action": "node ./test/getI18nList.test.js"
+    "test:action": "node ./test/mergeOpts.test.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,8 @@
   "homepage": "https://github.com/leobod/leo-analyst#readme",
   "dependencies": {
     "cross-env": "^7.0.3",
-    "glob": "^10.3.10"
+    "glob": "^10.3.10",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "electron": "^27.1.2",

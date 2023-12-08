@@ -1,31 +1,46 @@
 <template>
   <div class="CustomDragFrame">
     <div class="CustomDragHeader">
-      <div class="CustomDragHeader-BtnGroup">
-        <ArrowLeftBold
-          class="CustomDragHeader-BtnItem"
-          v-show="!($route.name === 'Home')"
-          @click="onGoBack"
-        />
-      </div>
       <div
         class="CustomDragHeader-TitleBar"
         @mousedown="onHandleMouseDown"
         @mouseup="onHandleMouseUp"
-        @mouseleave="onHandleMouseUp"
         @dblclick="onEmitWinAction('TOGGLE_MAX_WIN')"
       >
-        {{ $route.meta.title }}
+        <div class="CustomDragHeader-BtnGroup">
+          <div
+            class="CustomDragHeader-BtnItem mr-10"
+            :class="{
+              'CustomDragHeader-BtnItem_disable': !!($route.name === 'Home')
+            }"
+            @click="onGoBack"
+          >
+            <SvgIcon name="win-prev" />
+          </div>
+        </div>
+        <div class="CustomDragHeader-Title">
+          {{ $route.meta.title }}
+        </div>
       </div>
       <div class="CustomDragHeader-BtnGroup">
-        <Remove
-          class="CustomDragHeader-BtnItem"
+        <div
+          class="CustomDragHeader-BtnItem ml-10"
           @click="onEmitWinAction('MIN_WIN')"
-        />
-        <SwitchButton
-          class="CustomDragHeader-BtnItem"
+        >
+          <SvgIcon name="win-min" />
+        </div>
+        <div
+          class="CustomDragHeader-BtnItem ml-10"
+          @click="onEmitWinAction('TOGGLE_MAX_WIN')"
+        >
+          <SvgIcon :name="layout.isMax ? 'win-toggle-max' : 'win-max'" />
+        </div>
+        <div
+          class="CustomDragHeader-BtnItem ml-10 mr-10"
           @click="onEmitWinAction('CLOSE_WIN')"
-        />
+        >
+          <SvgIcon name="win-close" />
+        </div>
       </div>
     </div>
     <div class="CustomDragBody">
@@ -35,22 +50,33 @@
 </template>
 
 <script setup name="CustomDragFrame">
+import { reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Remove, SwitchButton, ArrowLeftBold } from '@element-plus/icons-vue'
+import SvgIcon from '@/components/SvgIcon/index.vue'
 const $router = useRouter()
 const $route = useRoute()
 
+const layout = reactive({
+  isMax: true
+})
+
 const onGoBack = () => {
-  document.referrer ? $router.go(-1) : $router.push('/')
+  if (!($route.name === 'Home')) {
+    document.referrer ? $router.go(-1) : $router.push('/')
+  }
 }
 
 const onEmitWinAction = (type) => {
   if (window && window.$ipc) {
     switch (type) {
       case 'MIN_WIN':
-      case 'CLOSE_WIN':
+      case 'CLOSE_WIN': {
+        window.$ipc.winAction({ type })
+        break
+      }
       case 'TOGGLE_MAX_WIN': {
         window.$ipc.winAction({ type })
+        layout.isMax = window.$ipc.winAction({ type: 'IS_MAX_WIN' })
         break
       }
     }
@@ -93,12 +119,10 @@ const onHandleMouseUp = (e) => {
     align-items: center;
     // -webkit-app-region: drag;
     height: 40px;
-    background-color: rgba(0, 0, 0); // #409eff;
+    background-color: #f4f4f5;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
-    // border-top-left-radius: 6px;
-    // border-top-right-radius: 6px;
     .CustomDragHeader-TitleBar {
       height: 100%;
       flex: 1;
@@ -106,29 +130,61 @@ const onHandleMouseUp = (e) => {
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      color: #ffffff;
+      color: #73767a;
       user-select: none;
       font-size: 12px;
-      // -webkit-app-region: no-drag;
+      padding: 6px 0;
+      box-sizing: border-box;
     }
-    .CustomDragHeader-BtnGroup {
-      padding: 0 20px;
+    .CustomDragHeader-Title {
+      height: 100%;
+      width: 30%;
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      height: 100%;
-      font-size: 16px;
-      -webkit-app-region: no-drag;
+      background-color: #e9e9eb;
+      border-radius: 6px;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+    .CustomDragHeader-BtnGroup {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
       .CustomDragHeader-BtnItem {
-        width: 1em;
-        height: 1em;
-        margin: 6px;
-        color: #ffffff;
+        height: 100%;
+        aspect-ratio: 1;
+        box-sizing: border-box;
+        padding: 6px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
         cursor: pointer;
+        svg {
+          width: 16px;
+          height: 16px;
+          fill: #000000;
+        }
       }
       .CustomDragHeader-BtnItem:hover {
-        color: #f56c6c;
+        background-color: #dedfe0;
+        border-radius: 6px;
+      }
+      .CustomDragHeader-BtnItem_disable {
+        cursor: not-allowed;
+        svg {
+          fill: #b1b3b8;
+        }
+      }
+      .CustomDragHeader-BtnItem_disable:hover {
+        svg {
+          fill: #b1b3b8;
+        }
       }
     }
   }
@@ -138,8 +194,6 @@ const onHandleMouseUp = (e) => {
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
-    // border-bottom-left-radius: 6px;
-    // border-bottom-right-radius: 6px;
   }
 }
 </style>
