@@ -8,17 +8,13 @@
   },
   "extraFiles": [
     {
-      "from": "web",
-      "to": "web"
-    },
-    {
       "from": "assets",
       "to": "assets"
     }
   ],
   "files": ["app.js", "src/**/*", "web/**/*", "logo.ico"],
   "win": {
-    "icon": "./logo.ico",
+    "icon": "./assets/icons/logo.ico",
     "target": [
       {
         "target": "nsis",
@@ -31,9 +27,9 @@
     "perMachine": true,
     "allowElevation": true,
     "allowToChangeInstallationDirectory": true,
-    "installerIcon": "./logo.ico",
-    "installerHeaderIcon": "./logo.ico",
-    "uninstallerIcon": "./uninstall.ico",
+    "installerIcon": "./assets/icons/logo.ico",
+    "installerHeaderIcon": "./assets/icons/logo.ico",
+    "uninstallerIcon": "./assets/icons/uninstall.ico",
     "createDesktopShortcut": true
   },
   "linux": {
