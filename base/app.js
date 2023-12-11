@@ -6,10 +6,19 @@ const root = {
   config: {
     env: 'production'
   },
-  views: []
+  mainWindow: null
 }
 
 app.whenReady().then(() => {
   root.app = app
   Home.create(root)
+})
+
+app.on('second-instance', () => {
+  /* 监听是否有第二个实例
+  if (root.mainWindow) {
+    root.mainWindow.win.restore()
+    root.mainWindow.win.show()
+  }
+  */
 })

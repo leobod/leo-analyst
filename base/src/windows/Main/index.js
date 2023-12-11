@@ -12,6 +12,7 @@ module.exports = {
     movingInterval: null,
     prevClickTime: null
   },
+  subWin: {},
   methods: {
     onHandleWinAction: function (event, params) {
       return CommonAction.win(this.win, params, this.model)
@@ -76,7 +77,7 @@ module.exports = {
         devTools: true
       }
     })
-    this.root.views.push({ name: this.name, value: this.win })
+    this.root.mainWindow = this
     this.loadIpc()
     this.loadPage()
   }
