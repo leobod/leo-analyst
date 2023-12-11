@@ -74,7 +74,7 @@ module.exports = {
       transparent: true,
       webPreferences: {
         preload: p.join(__dirname, './preload.js'),
-        devTools: true
+        devTools: !!this.root.config.devTools
       }
     })
     this.root.mainWindow = this

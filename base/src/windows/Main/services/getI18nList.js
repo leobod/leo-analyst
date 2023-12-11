@@ -77,6 +77,5 @@ const getI18nList = async (opts) => {
 }
 
 module.exports = {
-  getI18nList,
-  _getKeyList
+  getI18nList
 }

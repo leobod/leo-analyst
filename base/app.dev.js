@@ -4,7 +4,8 @@ const Home = require('./src/windows/Main/index')
 const root = {
   app: null,
   config: {
-    env: 'development'
+    env: 'development',
+    devTools: true
   },
   views: []
 }

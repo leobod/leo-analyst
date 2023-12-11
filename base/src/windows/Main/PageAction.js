@@ -1,5 +1,5 @@
-const { getPkgInfo } = require('./actions/getPkgInfo.js')
-const { getI18nList } = require('./actions/getI18nList.js')
+const { getPkgInfo } = require('./services/getPkgInfo.js')
+const { getI18nList } = require('./services/getI18nList.js')
 
 const PageFn = {
   GET_PKG_INFO: getPkgInfo,

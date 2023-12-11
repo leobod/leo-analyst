@@ -4,9 +4,13 @@ const Home = require('./src/windows/Main/index')
 const root = {
   app: null,
   config: {
-    env: 'production'
+    env: 'production',
+    devTools: false
   },
-  mainWindow: null
+  mainWindow: null,
+  db: {
+    sqlite: null
+  }
 }
 
 app.whenReady().then(() => {
