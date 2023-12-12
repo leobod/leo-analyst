@@ -7,7 +7,7 @@ module.exports = {
    * @param {*} opts
    * @returns
    */
-  OPEN_DIRECTORY: async (opts = {}) => {
+  OPEN_DIRECTORY_DIALOG: async (opts = {}) => {
     const defaultOpts = {
       title: '请选择文件夹',
       buttonLabel: '确定',
@@ -29,11 +29,12 @@ module.exports = {
    * @param {*} opts
    * @returns
    */
-  OPEN_FILE: async (opts = {}) => {
+  OPEN_FILE_DIALOG: async (opts = {}) => {
     const defaultOpts = {
       title: '请选择文件',
       buttonLabel: '确定',
-      properties: ['openFile', 'promptToCreate']
+      properties: ['openFile'],
+      filters: []
     }
     const finalOpts = _.merge({}, opts, defaultOpts)
     if (opts.properties && opts.properties.length > 0) {
@@ -46,9 +47,27 @@ module.exports = {
     const result = await dialog.showOpenDialog(finalOpts)
     return result
   },
+  SAVE_FILE_DIALOG: async (opts = {}) => {
+    const defaultOpts = {
+      title: '保存文件',
+      buttonLabel: '确定',
+      properties: ['openFile', 'promptToCreate'],
+      filters: []
+    }
+    const finalOpts = _.merge({}, opts, defaultOpts)
+    if (opts.properties && opts.properties.length > 0) {
+      for (const item of opts.properties) {
+        if (finalOpts.properties.indexOf(item) === -1) {
+          finalOpts.properties.push(item)
+        }
+      }
+    }
+    const result = await dialog.showSaveDialog(finalOpts)
+    return result
+  },
   /**
    * 保存文件
    * @param {*} opts
    */
-  saveFile: async (opts = {}) => {}
+  SAVE_FILE_MANUAL: async (opts = {}) => {}
 }

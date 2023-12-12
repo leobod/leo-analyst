@@ -197,10 +197,6 @@ const _getVueVersion = (pkgVal, pkgName = 'vue') => {
     const version = pkgItem.replace('^', '').replace('~', '')
     const versionList = version.split('.')
     const majorVersion = (versionList && versionList[0]) || null
-    // const minorVersion = (versionList && versionList[1]) || null
-    // const patchVersion = (versionList && versionList[2]) || null
-    // console.log(majorVersion, '\n', minorVersion, '\n', patchVersion)
-    // console.log([majorVersion, minorVersion, patchVersion])
     result = Number(majorVersion)
   }
   return result

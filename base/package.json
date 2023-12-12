@@ -1,7 +1,8 @@
 {
-  "name": "leo-analyst-base",
+  "name": "analyst",
   "version": "0.0.1",
   "description": "",
+  "group": "eside",
   "main": "app.js",
   "scripts": {
     "dev": "nodemon --exec electron app.dev.js",
@@ -24,6 +25,7 @@
     "axios": "^1.6.2",
     "cross-env": "^7.0.3",
     "crypto-js": "^4.2.0",
+    "electron-devtools-installer": "^3.2.0",
     "glob": "^10.3.10",
     "lodash": "^4.17.21",
     "sqlite3": "^5.1.6"

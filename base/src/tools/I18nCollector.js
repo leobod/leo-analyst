@@ -76,6 +76,26 @@ const getI18nList = async (opts) => {
   }
 }
 
+/**
+ * 保存i18nkeylist到指定路径
+ * @param {*} opts
+ * @returns
+ */
+const saveI18nKeyList = async (opts) => {
+  const { path, content } = opts
+  if (path) {
+    try {
+      fs.writeFileSync(path, content)
+    } catch (e) {
+      throw e
+    }
+    return null
+  } else {
+    throw new Error('请填写路径')
+  }
+}
+
 module.exports = {
-  getI18nList
+  getI18nList,
+  saveI18nKeyList
 }

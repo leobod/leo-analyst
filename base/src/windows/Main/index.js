@@ -1,4 +1,5 @@
 const p = require('path')
+const fs = require('fs')
 const url = require('url')
 const { BrowserWindow, ipcMain } = require('electron')
 const CommonAction = require('../../actions/index')
@@ -6,7 +7,7 @@ const PageAction = require('./PageAction')
 
 module.exports = {
   name: 'Home',
-  root: null,
+  $root: null,
   win: null,
   model: {
     movingInterval: null,
@@ -41,7 +42,7 @@ module.exports = {
    * 加载页面
    */
   loadPage: function () {
-    if (this.root.config.env === 'production') {
+    if (this.$root.env === 'production') {
       // 生产环境
       this.win.loadURL(
         url.format({
@@ -62,11 +63,11 @@ module.exports = {
   },
   /**
    * 构建窗体
-   * @param {*} root
+   * @param {*} $root
    * @param {*} opts
    */
-  create: function (root, opts = {}) {
-    this.root = root
+  create: function ($root, opts = {}) {
+    this.$root = $root
     this.win = new BrowserWindow({
       show: false,
       titleBarStyle: 'hidden',
@@ -74,10 +75,10 @@ module.exports = {
       transparent: true,
       webPreferences: {
         preload: p.join(__dirname, './preload.js'),
-        devTools: !!this.root.config.devTools
+        devTools: !!this.$root.devTools
       }
     })
-    this.root.mainWindow = this
+    this.$root.mainWindow = this
     this.loadIpc()
     this.loadPage()
   }

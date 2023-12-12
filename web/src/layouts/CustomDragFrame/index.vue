@@ -33,7 +33,7 @@
           class="CustomDragHeader-BtnItem ml-10"
           @click="onEmitWinAction('TOGGLE_MAX_WIN')"
         >
-          <SvgIcon :name="layout.isMax ? 'win-toggle-max' : 'win-max'" />
+          <SvgIcon :name="layout.isMax ? 'win-restore' : 'win-max'" />
         </div>
         <div
           class="CustomDragHeader-BtnItem ml-10 mr-10"
@@ -66,17 +66,17 @@ const onGoBack = () => {
   }
 }
 
-const onEmitWinAction = (type) => {
+const onEmitWinAction = async (type) => {
   if (window && window.$ipc) {
     switch (type) {
       case 'MIN_WIN':
       case 'CLOSE_WIN': {
-        window.$ipc.winAction({ type })
+        await window.$ipc.winAction({ type })
         break
       }
       case 'TOGGLE_MAX_WIN': {
-        window.$ipc.winAction({ type })
-        layout.isMax = window.$ipc.winAction({ type: 'IS_MAX_WIN' })
+        await window.$ipc.winAction({ type })
+        layout.isMax = await window.$ipc.winAction({ type: 'IS_MAX_WIN' })
         break
       }
     }
@@ -85,9 +85,9 @@ const onEmitWinAction = (type) => {
   }
 }
 
-const onHandleMouseDown = (e) => {
+const onHandleMouseDown = async (e) => {
   if (window && window.$ipc) {
-    window.$ipc.winAction({
+    await window.$ipc.winAction({
       type: 'MOVE_WIN',
       payload: { canMoving: true }
     })
@@ -96,9 +96,12 @@ const onHandleMouseDown = (e) => {
   }
 }
 
-const onHandleMouseUp = (e) => {
+const onHandleMouseUp = async (e) => {
   if (window && window.$ipc) {
-    window.$ipc.winAction({ type: 'MOVE_WIN', payload: { canMoving: false } })
+    await window.$ipc.winAction({
+      type: 'MOVE_WIN',
+      payload: { canMoving: false }
+    })
   } else {
     console.warn('平台暂不支持')
   }
@@ -147,6 +150,7 @@ const onHandleMouseUp = (e) => {
       border-radius: 6px;
       flex-wrap: nowrap;
       overflow: hidden;
+      white-space: nowrap;
       text-overflow: ellipsis;
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
@@ -182,6 +186,7 @@ const onHandleMouseUp = (e) => {
         }
       }
       .CustomDragHeader-BtnItem_disable:hover {
+        background-color: transparent;
         svg {
           fill: #b1b3b8;
         }

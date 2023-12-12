@@ -17,13 +17,19 @@ module.exports = {
       throw e
     }
   },
-  win: (win, params, model = {}) => {
+  win: async (win, params, model = {}) => {
     const { type, payload } = params
     let result = null
     const fn = WinAction[type]
-    if (fn) {
-      result = fn(win, payload, model)
+    try {
+      if (fn) {
+        result = fn(win, payload, model)
+      } else {
+        throw new Error('暂不支持此方法')
+      }
+      return result
+    } catch (e) {
+      throw e
     }
-    return result
   }
 }

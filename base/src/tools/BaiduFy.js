@@ -16,15 +16,18 @@ module.exports = {
   */
   /**
    * 封装百度通用文本翻译
-   * @param {*} appid
-   * @param {*} appsecret
    * @param {*} query
    * @param {*} form
    * @param {*} to
+   * @param {*} to
    * @returns
    */
-  uniTextTranslate: async (appid, appsecret, query, from = 'zh', to = 'en') => {
-    const url = 'https://fanyi-api.baidu.com/api/trans/vip/translate'
+  uniTextTranslate: async (query, from = 'zh', to = 'en', opts = {}) => {
+    const {
+      appid = '',
+      appsecret = '',
+      url = 'https://fanyi-api.baidu.com/api/trans/vip/translate'
+    } = opts
     const salt = new Date().getTime()
     const str1 = appid + query + salt + appsecret
     const sign = CryptoJS.MD5(str1)

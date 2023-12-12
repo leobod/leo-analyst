@@ -1,9 +1,10 @@
-const { getPkgInfo } = require('./services/getPkgInfo.js')
-const { getI18nList } = require('./services/getI18nList.js')
+const { getPkgInfo } = require('../../tools/PkgLoader.js')
+const { getI18nList, saveI18nKeyList } = require('../../tools/I18nCollector.js')
 
 const PageFn = {
   GET_PKG_INFO: getPkgInfo,
-  GET_I18N_LIST: getI18nList
+  GET_I18N_LIST: getI18nList,
+  SAVE_I18N_KEYLIST: saveI18nKeyList
 }
 
 module.exports = {
