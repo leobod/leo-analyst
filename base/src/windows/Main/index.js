@@ -3,7 +3,6 @@ const fs = require('fs')
 const url = require('url')
 const { BrowserWindow, ipcMain } = require('electron')
 const Services = require('../../services/index')
-const PageAction = require('./PageAction')
 
 module.exports = {
   name: 'Home',

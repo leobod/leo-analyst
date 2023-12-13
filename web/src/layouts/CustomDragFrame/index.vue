@@ -53,6 +53,7 @@
 import { reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import SvgIcon from '@/components/SvgIcon/index.vue'
+import { Min, ToggleMax, IsMax, Close, Move } from '@/api/ipc/Win'
 const $router = useRouter()
 const $route = useRoute()
 
@@ -67,43 +68,39 @@ const onGoBack = () => {
 }
 
 const onEmitWinAction = async (type) => {
-  if (window && window.$ipc) {
+  try {
     switch (type) {
       case 'MIN_WIN':
+        await Min()
+        break
       case 'CLOSE_WIN': {
-        await window.$ipc.winAction({ type })
+        await Close()
         break
       }
       case 'TOGGLE_MAX_WIN': {
-        await window.$ipc.winAction({ type })
-        layout.isMax = await window.$ipc.winAction({ type: 'IS_MAX_WIN' })
+        await ToggleMax()
+        layout.isMax = await IsMax()
         break
       }
     }
-  } else {
-    console.warn('平台暂不支持')
+  } catch (e) {
+    console.warn(e)
   }
 }
 
 const onHandleMouseDown = async (e) => {
-  if (window && window.$ipc) {
-    await window.$ipc.winAction({
-      type: 'MOVE_WIN',
-      payload: { canMoving: true }
-    })
-  } else {
-    console.warn('平台暂不支持')
+  try {
+    await await Move({ canMoving: true })
+  } catch (e) {
+    console.warn(e)
   }
 }
 
 const onHandleMouseUp = async (e) => {
-  if (window && window.$ipc) {
-    await window.$ipc.winAction({
-      type: 'MOVE_WIN',
-      payload: { canMoving: false }
-    })
-  } else {
-    console.warn('平台暂不支持')
+  try {
+    await await Move({ canMoving: false })
+  } catch (e) {
+    console.warn(e)
   }
 }
 </script>

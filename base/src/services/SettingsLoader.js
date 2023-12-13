@@ -37,7 +37,7 @@ const GetSettings = (payload = {}, $current = null, $root = null) => {
 
 const InitSettings = (payload = {}, $current = null, $root = null) => {
   DetectSettingsPath(payload, $current, $root)
-  LoadConfig(payload, $current, $root)
+  GetSettings(payload, $current, $root)
 }
 
 module.exports = {

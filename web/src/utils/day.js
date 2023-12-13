@@ -11,25 +11,40 @@ dayjs.locale('zh-cn')
 export const formatDate = (str, format) => {
   return dayjs(str).format(format)
 }
-
-const toDate = (d) => {
-  return dayjs(d).toDate()
-}
-
 /**
  * dayjs转Date
- * @param str
+ * @param d
  * @return {Date}
  */
-export const dayjsToDate = (str) => {
-  return dayjs(str).toDate()
+export const toDate = (d) => {
+  return dayjs(d).toDate()
 }
-
+/**
+ * 当前小时的开始时间
+ * @param {*} d
+ * @param {*} h
+ * @returns
+ */
 export const getStartOfHour = (d, h = 'HH') =>
   formatDate(d, `YYYY/MM/DD ${h}:00:00`)
-const getStartOfDay = (d) => formatDate(d, 'YYYY/MM/DD 00:00:00')
-const getEndOfDay = (d) => formatDate(d, 'YYYY/MM/DD 23:59:59')
-const getStartOfWeek = (d) => {
+/**
+ * 当前天的开始时间
+ * @param {*} d
+ * @returns
+ */
+export const getStartOfDay = (d) => formatDate(d, 'YYYY/MM/DD 00:00:00')
+/**
+ * 当前天的结束时间
+ * @param {*} d
+ * @returns
+ */
+export const getEndOfDay = (d) => formatDate(d, 'YYYY/MM/DD 23:59:59')
+/**
+ * 当前周的开始时间
+ * @param {*} d
+ * @returns
+ */
+export const getStartOfWeek = (d) => {
   const date = toDate(d)
   const r = toDate(d)
   if (date.getDay() === 0) {
@@ -39,6 +54,11 @@ const getStartOfWeek = (d) => {
   }
   return getStartOfDay(r)
 }
+/**
+ * 当前周的结束时间
+ * @param {*} d
+ * @returns
+ */
 export const getEndOfWeek = (d) => {
   const date = toDate(d)
   const r = toDate(d)
@@ -49,8 +69,17 @@ export const getEndOfWeek = (d) => {
   }
   return getEndOfDay(r)
 }
+/**
+ * 当前月的开始时间
+ * @param {*} d
+ * @returns
+ */
 export const getStartOfMonth = (d) => formatDate(d, 'YYYY/MM/01 00:00:00')
-
+/**
+ * 当前月最大天数
+ * @param {*} d
+ * @returns
+ */
 export const getMaxDateOfMonth = (d) => {
   const date = toDate(d)
   date.setDate(1)
@@ -58,12 +87,23 @@ export const getMaxDateOfMonth = (d) => {
   date.setDate(0)
   return date.getDate()
 }
-
+/**
+ * 当前月的结束时间
+ * @param {*} d
+ * @returns
+ */
 export const getEndOfMonth = (d) => {
   const lastDate = getMaxDateOfMonth(d)
   return formatDate(d, `YYYY/MM/${lastDate} 23:59:59`)
 }
-
+/**
+ * 当前时间的最近的时间
+ * @param {*} d
+ * @param {*} interval
+ * @param {*} step
+ * @param {*} type
+ * @returns
+ */
 export const getCloserDateTime = (
   d,
   interval = 15,
@@ -87,7 +127,6 @@ export const getCloserDateTime = (
   date.setHours(date.getHours(), (numberInterval + step) * interval, 0, 0)
   return date
 }
-
 /**
  * 是否是今天
  * @param d

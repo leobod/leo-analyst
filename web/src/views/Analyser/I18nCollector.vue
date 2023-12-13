@@ -95,6 +95,9 @@
 
 <script setup name="I18nCollector">
 import { reactive, ref, toRaw } from 'vue'
+import { OpenDirectoryDialog } from '@/api/ipc/File'
+import { GetPkgInfo } from '@/api/ipc/PkgLoader'
+import { GetI18nList } from '@/api/ipc/I18nCollector'
 
 const page = reactive({
   loading: {
@@ -147,44 +150,24 @@ const step2 = reactive({
   ],
   data: []
 })
-
 /**
  * 调用ipc实现文件夹路径选择
  */
 const onHandleSelectDir = async () => {
-  if (window && window.$ipc) {
-    window.$ipc.fileAction({ type: 'OPEN_DIRECTORY' }).then(async (res) => {
-      if (!res.canceled) {
-        step1.form.dir = res.filePaths[0] || ''
-        const pkgInfo = await _getPkgInfo(step1.form.dir)
-        if (pkgInfo) {
-          step1.form.projectName = pkgInfo.name
-          step1.form.vueVersion = _getVueVersion(pkgInfo)
-        }
+  try {
+    const dirRes = await OpenDirectoryDialog()
+    if (!dirRes.canceled) {
+      step1.form.dir = dirRes.filePaths[0] || ''
+      const pkgInfo = await GetPkgInfo({ path: step1.form.dir })
+      if (pkgInfo) {
+        step1.form.projectName = pkgInfo.name
+        step1.form.vueVersion = _getVueVersion(pkgInfo)
       }
-    })
-  } else {
-    console.warn('暂不支持')
-  }
-}
-
-/**
- * 读取pkg信息
- * @param {*} path
- */
-const _getPkgInfo = async (path) => {
-  if (window && window.$ipc) {
-    const finalParams = {
-      type: 'GET_PKG_INFO',
-      payload: { path }
     }
-    const res = await window.$ipc.pageAction(finalParams)
-    return res
-  } else {
-    console.warn('暂不支持')
+  } catch (e) {
+    console.warn(e)
   }
 }
-
 /**
  * 根据pkg对象，获取vue版本信息
  * @param {*} pkgVal
@@ -209,37 +192,22 @@ const onHandleSubmitStep1 = () => {
   page.loading.submit = true
   step1FormRef.value.validate(async (valid, fields) => {
     if (valid) {
-      if (window && window.$ipc) {
-        const finalParams = Object.assign(
-          {},
-          {
-            type: 'GET_I18N_LIST',
-            payload: {
-              path: step1.form.dir,
-              matchRule: toRaw(step1.form.matchRule)
-            }
+      try {
+        const i18nRes = await GetI18nList({
+          path: step1.form.dir,
+          matchRule: toRaw(step1.form.matchRule)
+        })
+        step2.data = i18nRes.map((item) => {
+          return {
+            label: item,
+            value: item
           }
-        )
-        window.$ipc
-          .pageAction(finalParams)
-          .then((res) => {
-            step2.data = res.map((item) => {
-              return {
-                label: item,
-                value: item
-              }
-            })
-            onHandleNext(1)
-          })
-          .catch((e) => {
-            console.log('e', e)
-          })
-          .finally(() => {
-            page.loading.submit = false
-          })
-      } else {
-        page.loading.submit = false
+        })
+        onHandleNext(1)
+      } catch (e) {
+        console.warn(e)
       }
+      page.loading.submit = false
     } else {
       page.loading.submit = false
     }

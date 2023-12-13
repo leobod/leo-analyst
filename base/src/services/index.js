@@ -15,10 +15,10 @@ const serviceList = {
 }
 
 const getFn = (type) => {
-  let fn = null
+  let fn = serviceList
   const typeList = type.split('/')
   for (const item of typeList) {
-    fn = serviceList[item]
+    fn = fn[item]
     if (!fn) {
       return null
     }

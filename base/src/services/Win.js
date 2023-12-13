@@ -14,7 +14,7 @@ const { screen } = require('electron')
  * 最小化
  * @param {*} win
  */
-const Min = (payload, $current = null, $root = null) => {
+const Min = (payload = {}, $current = null, $root = null) => {
   const win = $current.win
   if (win) {
     win.minimize()
@@ -26,7 +26,7 @@ const Min = (payload, $current = null, $root = null) => {
  * 最大化
  * @param {*} win
  */
-const Max = (payload, $current = null, $root = null) => {
+const Max = (payload = {}, $current = null, $root = null) => {
   const win = $current.win
   if (win) {
     win.maximize()
@@ -34,7 +34,7 @@ const Max = (payload, $current = null, $root = null) => {
     throw new Error('win not found')
   }
 }
-const IsMax = (payload, $current = null, $root = null) => {
+const IsMax = (payload = {}, $current = null, $root = null) => {
   const win = $current.win
   if (win) {
     return win.isMaximized()
@@ -46,7 +46,7 @@ const IsMax = (payload, $current = null, $root = null) => {
  * 切换最大化
  * @param {*} win
  */
-const ToggleMax = (payload, $current = null, $root = null) => {
+const ToggleMax = (payload = {}, $current = null, $root = null) => {
   const win = $current.win
   if (win) {
     if (win.isMaximized()) {
@@ -63,7 +63,7 @@ const ToggleMax = (payload, $current = null, $root = null) => {
  * 关闭
  * @param {*} win
  */
-const Close = (payload, $current = null, $root = null) => {
+const Close = (payload = {}, $current = null, $root = null) => {
   const win = $current.win
   if (win) {
     win.close()
@@ -77,7 +77,7 @@ const Close = (payload, $current = null, $root = null) => {
  * @param {*} payload
  * @param {*} model
  */
-const Move = (payload, $current = null, $root = null) => {
+const Move = (payload = {}, $current = null, $root = null) => {
   const { canMoving } = payload
   const win = $current.win
   const model = $current.model
