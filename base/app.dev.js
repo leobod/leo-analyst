@@ -1,6 +1,6 @@
 const fs = require('fs')
 const { app } = require('electron')
-const SettingsLoader = require('./src/tools/SettingsLoader')
+const SettingsLoader = require('./src/services/SettingsLoader')
 const Home = require('./src/windows/Main/index')
 const {
   default: installExtension,
@@ -28,7 +28,7 @@ const $root = {
   }
 }
 
-SettingsLoader.initSettings($root)
+SettingsLoader.InitSettings({}, null, $root)
 
 app.whenReady().then(() => {
   if ($root.env === 'development') {

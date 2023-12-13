@@ -1,10 +1,10 @@
 const fs = require('fs')
 const { app } = require('electron')
-const SettingsLoader = require('./src/tools/SettingsLoader')
+const SettingsLoader = require('./src/services/SettingsLoader')
 const Home = require('./src/windows/Main/index')
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
 
-const root = {
+const $root = {
   app: app,
   env: 'production',
   devTools: false,
@@ -24,11 +24,10 @@ const root = {
   }
 }
 
-SettingsLoader.initSettings($root)
+SettingsLoader.InitSettings({}, null, $root)
 
 app.whenReady().then(() => {
-  root.app = app
-  Home.create(root)
+  Home.create($root)
 })
 
 app.on('second-instance', () => {

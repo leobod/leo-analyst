@@ -55,10 +55,12 @@ const _getKeyList = (path, i18nList, opts = {}) => {
 
 /**
  * 根据工程路径获取下面所有的i18n关键字
- * @param {*} opts { path:string, absolute: boolean, matchRule: [] }
+ * @param {*} payload { path:string, absolute: boolean, matchRule: [] }
+ * @param {*} $current
+ * @param {*} $root
  * @returns
  */
-const getI18nList = async (opts) => {
+const GetI18nList = async (payload = {}, $current = null, $root = null) => {
   if (opts.path) {
     const finalOpts = Object.assign({}, opts, { absolute: true })
     let i18nList = []
@@ -78,11 +80,13 @@ const getI18nList = async (opts) => {
 
 /**
  * 保存i18nkeylist到指定路径
- * @param {*} opts
+ * @param {*} payload { path, content }
+ * @param {*} $current
+ * @param {*} $root
  * @returns
  */
-const saveI18nKeyList = async (opts) => {
-  const { path, content } = opts
+const SaveI18nKeyList = async (payload = {}, $current = null, $root = null) => {
+  const { path, content } = payload
   if (path) {
     try {
       fs.writeFileSync(path, content)
@@ -96,6 +100,6 @@ const saveI18nKeyList = async (opts) => {
 }
 
 module.exports = {
-  getI18nList,
-  saveI18nKeyList
+  GetI18nList,
+  SaveI18nKeyList
 }

@@ -1,5 +1,5 @@
-const { getPkgInfo } = require('../../tools/PkgLoader.js')
-const { getI18nList, saveI18nKeyList } = require('../../tools/I18nCollector.js')
+const { getPkgInfo } = require('../../services/PkgLoader.js')
+const { getI18nList, saveI18nKeyList } = require('../../services/I18nCollector.js')
 
 const PageFn = {
   GET_PKG_INFO: getPkgInfo,

@@ -3,11 +3,13 @@ const p = require('path')
 
 /**
  * 获取指定工程的package.json信息
- * @param {*} opts
+ * @param {*} payload
+ * @param {*} $current
+ * @param {*} $root
  * @returns
  */
-const getPkgInfo = async (opts) => {
-  const { path } = opts
+const GetPkgInfo = async (payload = {}, $current = null, $root = null) => {
+  const { path } = payload
   const pkgPath = p.join(path, './package.json')
   const isPkgExist = fs.existsSync(pkgPath)
   if (isPkgExist) {
@@ -38,5 +40,5 @@ const getPkgInfo = async (opts) => {
 }
 
 module.exports = {
-  getPkgInfo
+  GetPkgInfo
 }

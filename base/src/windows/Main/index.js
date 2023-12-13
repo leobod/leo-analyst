@@ -2,7 +2,7 @@ const p = require('path')
 const fs = require('fs')
 const url = require('url')
 const { BrowserWindow, ipcMain } = require('electron')
-const CommonAction = require('../../actions/index')
+const Services = require('../../services/index')
 const PageAction = require('./PageAction')
 
 module.exports = {
@@ -15,27 +15,22 @@ module.exports = {
   },
   subWin: {},
   methods: {
-    onHandleWinAction: function (event, params) {
-      return CommonAction.win(this.win, params, this.model)
-    },
-    onHandleFileAction: async function (event, params) {
-      return await CommonAction.file(params)
-    },
-    onHandlePageAction: async function (event, params) {
-      return await PageAction.page(params)
+    onHandleServices: async function (event, params) {
+      const finalParams = {
+        ...params,
+        $current: this,
+        $root: this.$root
+      }
+      return await Services.handle(finalParams)
     }
   },
   /**
    * 绑定ipc事件
    */
   loadIpc: function () {
-    ipcMain.handle('win:action', this.methods.onHandleWinAction.bind(this))
-    ipcMain.handle('file:action', this.methods.onHandleFileAction.bind(this))
-    ipcMain.handle('page:action', this.methods.onHandlePageAction.bind(this))
+    ipcMain.handle('service', this.methods.onHandleServices.bind(this))
     this.win.on('closed', () => {
-      ipcMain.removeHandler('win:action')
-      ipcMain.removeHandler('file:action')
-      ipcMain.removeHandler('page:action')
+      ipcMain.removeHandler('service')
     })
   },
   /**
