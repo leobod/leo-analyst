@@ -1,6 +1,7 @@
 const fs = require('fs')
 const { app } = require('electron')
 const SettingsLoader = require('./src/services/SettingsLoader')
+const MacInfo = require('./src/services/MacInfo')
 const Home = require('./src/windows/Main/index')
 const {
   default: installExtension,
@@ -29,6 +30,7 @@ const $root = {
 }
 
 SettingsLoader.InitSettings({}, null, $root)
+console.log(MacInfo.GetMAC())
 
 app.whenReady().then(() => {
   if ($root.env === 'development') {
