@@ -1,5 +1,7 @@
 const { globSync } = require('glob')
 const fs = require('fs')
+const p = require('path')
+const readline = require('readline')
 
 /**
  * 需要匹配的规则
@@ -15,11 +17,12 @@ const MATCH_RULES = {
   }
 }
 
-const _isDirExist = function (path) {
-  const pathList = path.split('/')
-  const dirPath = pathList.splice(-1, 1).join('/')
-  const result = fs.existsSync(dirPath)
-  return result
+const _isFileExist = function (path) {
+  if (path) {
+    return fs.existsSync(path)
+  } else {
+    return false
+  }
 }
 const _createDirIfNotExist = function (path) {
   const pathList = path.split('/')
@@ -29,6 +32,25 @@ const _createDirIfNotExist = function (path) {
     fs.mkdirSync(dirPath)
   }
 }
+
+const _readFileEachLine = function (fReadName) {
+  return new Promise((resolve) => {
+    let fRead = fs.createReadStream(fReadName)
+    let objReadline = readline.createInterface({
+      input: fRead
+    })
+    let arr = new Array()
+    objReadline.on('line', (line) => {
+      if (line !== '') {
+        arr.push(line)
+      }
+    })
+    objReadline.on('close', () => {
+      resolve(arr)
+    })
+  })
+}
+
 /**
  * 根据单个文件路径尝试处理
  * @param {*} path
@@ -93,6 +115,26 @@ const GetKeyList = async (payload = {}, $current = null, $root = null) => {
   }
 }
 
+const ParseContent = async (payload = {}, $current = null, $root = null) => {
+  const { text = '', defaultVal = {} } = payload
+  let content = defaultVal
+  try {
+    content = JSON.parse(content)
+  } catch (e) {
+    content = defaultVal
+  }
+  return content
+}
+
+const ReadContent = async (payload = {}, $current = null, $root = null) => {
+  const { path } = payload
+  if (_isFileExist(path)) {
+    return fs.readFileSync(path)
+  } else {
+    return ''
+  }
+}
+
 /**
  * 保存i18nkeylist到指定路径
  * @param {*} payload { path, content }
@@ -100,7 +142,7 @@ const GetKeyList = async (payload = {}, $current = null, $root = null) => {
  * @param {*} $root
  * @returns
  */
-const SaveFile = async (payload = {}, $current = null, $root = null) => {
+const SaveContent = async (payload = {}, $current = null, $root = null) => {
   const { path, content } = payload
   if (path) {
     try {
@@ -133,9 +175,8 @@ const GetAndSaveFromWorkspace = async (
     allKey[key] = key
   }
   const allKeyStr = JSON.stringify(allKey, null, 2)
-  const saveOpts = { path: savePath, content: allKeyStr }
-  await SaveFile(saveOpts)
-  return saveOpts.path
+  await SaveContent({ path: savePath, content: allKeyStr })
+  return savePath
 }
 
 const GetDiffKey = async (payload = {}, $current = null, $root = null) => {
@@ -143,12 +184,53 @@ const GetDiffKey = async (payload = {}, $current = null, $root = null) => {
   let leftStr = ''
   let rightStr = ''
   if (type === 'FILE') {
+    leftStr = ReadContent({ path: left })
+    rightStr = ReadContent({ path: right })
   }
+  const leftObj = ParseContent({ text: leftStr, defaultVal: {} })
+  const rightObj = ParseContent({ text: rightStr, defaultVal: {} })
+  const distPath = {
+    same: p.join(saveDir, `${saveKey}_same.json`),
+    diff: p.join(saveDir, `${saveKey}_diff.json`),
+    diffArr: p.join(saveDir, `${saveKey}_diffArr.txt`),
+    diffBlank: p.join(saveDir, `${saveKey}_diffBlank.json`)
+  }
+  const sameObj = {}
+  const diffArr = []
+  for (const key in leftObj) {
+    if (rightObj[key]) {
+      sameObj[key] = rightObj[key]
+    } else {
+      diffArr.push(key)
+    }
+  }
+  const diffObj = {}
+  const diffBlankObj = {}
+  for (const key of diffArr) {
+    diffObj[key] = key
+    diffBlankObj[key] = ''
+  }
+  await SaveContent({
+    path: distPath.same,
+    content: JSON.stringify(sameObj, null, 2)
+  })
+  await SaveContent({
+    path: distPath.diff,
+    content: JSON.stringify(diffObj, null, 2)
+  })
+  await SaveContent({ path: distPath.diffArr, content: diffArr.join('\n') })
+  await SaveContent({
+    path: distPath.diffBlank,
+    content: JSON.stringify(diffBlankObj, null, 2)
+  })
+  return distPath
 }
 
 module.exports = {
+  ParseContent,
+  ReadContent,
+  SaveContent,
   GetKeyList,
-  SaveFile,
   GetAndSaveFromWorkspace,
   GetDiffKey
 }
