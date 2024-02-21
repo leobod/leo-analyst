@@ -15,6 +15,20 @@ const MATCH_RULES = {
   }
 }
 
+const _isDirExist = function (path) {
+  const pathList = path.split('/')
+  const dirPath = pathList.splice(-1, 1).join('/')
+  const result = fs.existsSync(dirPath)
+  return result
+}
+const _createDirIfNotExist = function (path) {
+  const pathList = path.split('/')
+  const dirPath = pathList.splice(-1, 1).join('/')
+  const result = fs.existsSync(dirPath)
+  if (result) {
+    fs.mkdirSync(dirPath)
+  }
+}
 /**
  * 根据单个文件路径尝试处理
  * @param {*} path
@@ -45,7 +59,7 @@ const _getKeyList = (path, i18nList, opts = {}) => {
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log('err: ', err)
       })
       .finally(() => {
         resolve(null)
@@ -60,7 +74,8 @@ const _getKeyList = (path, i18nList, opts = {}) => {
  * @param {*} $root
  * @returns
  */
-const GetI18nList = async (payload = {}, $current = null, $root = null) => {
+const GetKeyList = async (payload = {}, $current = null, $root = null) => {
+  const opts = payload
   if (opts.path) {
     const finalOpts = Object.assign({}, opts, { absolute: true })
     let i18nList = []
@@ -85,21 +100,55 @@ const GetI18nList = async (payload = {}, $current = null, $root = null) => {
  * @param {*} $root
  * @returns
  */
-const SaveI18nKeyList = async (payload = {}, $current = null, $root = null) => {
+const SaveFile = async (payload = {}, $current = null, $root = null) => {
   const { path, content } = payload
   if (path) {
     try {
+      _createDirIfNotExist(path)
       fs.writeFileSync(path, content)
     } catch (e) {
       throw e
     }
-    return null
   } else {
     throw new Error('请填写路径')
   }
 }
 
+const GetAndSaveFromWorkspace = async (
+  payload = {},
+  $current = null,
+  $root = null
+) => {
+  const { workspace, matchRule = [], savePath } = payload
+  if (!workspace) {
+    throw new Error('please set workspace')
+  }
+  if (!savePath) {
+    throw new Error('please set savePath')
+  }
+  const getOpts = { path: workspace, matchRule: matchRule }
+  let allKey = {}
+  let keyList = await GetKeyList(getOpts)
+  for (const key of keyList) {
+    allKey[key] = key
+  }
+  const allKeyStr = JSON.stringify(allKey, null, 2)
+  const saveOpts = { path: savePath, content: allKeyStr }
+  await SaveFile(saveOpts)
+  return saveOpts.path
+}
+
+const GetDiffKey = async (payload = {}, $current = null, $root = null) => {
+  const { type, left, right, saveDir, saveKey } = payload
+  let leftStr = ''
+  let rightStr = ''
+  if (type === 'FILE') {
+  }
+}
+
 module.exports = {
-  GetI18nList,
-  SaveI18nKeyList
+  GetKeyList,
+  SaveFile,
+  GetAndSaveFromWorkspace,
+  GetDiffKey
 }
